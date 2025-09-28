@@ -1,4 +1,6 @@
 #import "utils.typ":is-empty
+
+
 #let table-multi-page(continue-header-label: [], continue-footer-label: [], ..table-args) = context {
   let columns = table-args.named().at("columns", default: 1)
   let column-amount = if type(columns) == int {

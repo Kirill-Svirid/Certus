@@ -60,26 +60,26 @@
 
 
 
-#let enable-referenceable-enums(doc) = {
-  show ref: it => {
-    let el = it.element
-    if el != none and el.func() == metadata and el == enum-label-mark {
-      let supp = it.supplement
-      if supp == auto { supp = "Item" }
-      // get the counter value in the correct format according to location
-      let loc = el.location()
-      let ref-counter = context numbering(state("enum-numbering").at(loc), ..counter(enum-counter-name).at(loc))
-      if is-empty(supp) {
-        link(el.location(), ref-counter)
-      } else {
-        link(el.location(), box([#supp~#ref-counter]))
-      }
-    } else {
-      it
-    }
-  }
-  doc
-}
+// #let enable-referenceable-enums(doc) = {
+//   show ref: it => {
+//     let el = it.element
+//     if el != none and el.func() == metadata and el == enum-label-mark {
+//       let supp = it.supplement
+//       if supp == auto { supp = "Item" }
+//       // get the counter value in the correct format according to location
+//       let loc = el.location()
+//       let ref-counter = context numbering(state("enum-numbering").at(loc), ..counter(enum-counter-name).at(loc))
+//       if is-empty(supp) {
+//         link(el.location(), ref-counter)
+//       } else {
+//         link(el.location(), box([#supp~#ref-counter]))
+//       }
+//     } else {
+//       it
+//     }
+//   }
+//   doc
+// }
 
 #let wrapped-enum-numbering(numbering) = {
   let enum-numbering = (..it) => {

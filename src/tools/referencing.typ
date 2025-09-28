@@ -1,6 +1,6 @@
 #import "@preview/t4t:0.4.3"
 #import "@local/oxifmt:1.0.0"
-#import "utils.typ": is-empty, to-string, string-convert-quote-marks
+#import "utils.typ": is-empty, string-convert-quote-marks, to-string
 #import "bit-math.typ": *
 
 #let flg-half-date = 1
@@ -50,6 +50,7 @@
     type(doc.at("repr-func")) == function,
     message: "Тип поля должен быть функцией",
   )
+
   assert(
     type(doc.at("flags")) in (int, type(none)),
     message: "Тип поля должен быть целым" + repr(type(doc.at("flags"))),
@@ -338,6 +339,7 @@
       it
     }
   }
+
   let document-types
   if type(documents) in (str, content) {
     document-types = (documents,)
@@ -365,7 +367,7 @@
         [#document-default-repr(item)],
         [#link],
       )
-    }
+    },
   )
 }
 
