@@ -1,11 +1,11 @@
-#import "tools/headings.typ": *
-#import "tools/annexes.typ": *
-#import "tools/pageframe.typ": page-frame-sequence
-#import "tools/base.typ": *
-#import "@preview/t4t:0.4.3": is-empty
+#import "../tools/headings.typ": *
+#import "../tools/annexes.typ": *
+#import "../tools/utils.typ": is-empty
+
+#let default = state("default-settings", (:))
 
 
-#let set-correct-indent-list-and-enum-items(doc) = {
+#let set-indenting-for-list-and-enum-items(doc) = {
   let first-line-indent() = if type(par.first-line-indent) == dictionary {
     par.first-line-indent.amount
   } else {
@@ -88,16 +88,17 @@
 }
 
 
-// Default styling for document
-#let style-ver-1(doc) = {
-  show: set-base-style.with()
+// Стиль документа по умолчанию.
+// Применяется для документов типа ПЗ, ТУ, ТЗ, РР и др.
+#let style-tech-1(doc) = {
   let header-counter = counter("header-all")
   set page(margin: (left: 30mm, rest: 20mm))
+  set text(font: "Times New Roman",lang: "ru")
   set heading(numbering: "1.1.1", supplement: none)
-  set list(marker: [–])
+  set list(marker: sym.dash.en)
   set ref(supplement: none)
 
-  set figure.caption(separator: " - ")
+  set figure.caption(separator: [ ] + sym.dash.en + [ ])
 
   set par(
     first-line-indent: (
@@ -116,12 +117,16 @@
         it.element.location(),
         block(context par(
           hanging-indent: measure(it.element.supplement).width + 0.5cm,
-          [#it.element.supplement #it.prefix() #it.element.body]
-            + sym.space
-            + box(width: 1fr, it.fill)
-            + sym.space
-            + sym.wj
-            + it.page(),
+          ..(
+            it.element.supplement,
+            it.prefix(),
+            it.element.body,
+            sym.space,
+            box(width: 1fr, it.fill),
+            sym.space,
+            sym.wj,
+            it.page(),
+          ),
         )),
       )
     } else {
@@ -129,16 +134,6 @@
     }
   }
 
-
-  show heading: it => block(width: 100%)[
-    #if not is-empty(it.numbering) {
-      h(1.25cm) + counter(heading).display(it.numbering) + [ ] + [#it.body]
-    } else {
-      h(1.25cm) + it.body
-    }
-  ]
-
-  show link: set text(fill: eastern, weight: "medium")
 
   show figure.where(kind: table): it => {
     set figure.caption(position: top)
@@ -167,9 +162,25 @@
   )
   show figure: set block(breakable: true)
 
-  show: set-heading-titles
 
-  show: set-correct-indent-list-and-enum-items
+  // Selects headings of level 1 and body of special list of content to disable enumeration for them (GOST requirements)
+  let folder-func(sel, item) = sel.or(heading.where(body: item, level: 1))
+  let selector-structural-heading = structural-heading-titles.values().fold(selector, folder-func)
+  show selector-structural-heading: set align(center)
+  show selector-structural-heading: set heading(numbering: none)
+
+  // show heading.where(): it => [#set heading(numbering: none)]
+
+
+  show: set-indenting-for-list-and-enum-items
+
+  show heading: it => {
+    if not is-empty(it.numbering) {
+      counter(heading).display(it.numbering) + [ ] + [#it.body]
+    } else {
+      it.body
+    }
+  }
 
   show heading: it => {
     set pad(left: 1cm)

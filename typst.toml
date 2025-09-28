@@ -1,7 +1,7 @@
 [package]
 name = "certus"
 version = "0.1.0"
-entrypoint = "src/entry.typ"
+entrypoint = "src/lib.typ"
 authors = ["Kirill Svirid <svirid-kirill97@yandex.ru>"]
 description = "Template for styling technical documents according to GOST standards"
 repository = "https://github.com/Kirill-Svirid/Typst-GOST-Styling.git"

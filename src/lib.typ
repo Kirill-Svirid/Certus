@@ -4,9 +4,9 @@
   header-reference,
 )
 #import "tools/enums.typ": enable-referenceable-enums
-#import "style.typ": style-ver-1
+#import "style/style.typ": style-tech-1
 #import "tools/annexes.typ" as annexes
 #import "tools/outlines.typ": outline-break-by-enum
 #import "tools/numbering.typ": enum-heading-numbering, enum-label, enum-list-numbering
 #import "tools/table-tools.typ": table-multi-page
-#import "style.typ": style-ver-1
+#import "style/style.typ": style-tech-1

@@ -76,7 +76,14 @@ sgdfg
   },
 )
 
+// flg
+#let flg=symbol(
+  ("half","1"),
+  ("smart","2"),
+  ("trim","3"),
+)
 
+#(int(flg.smart)+10)
 
 // #let s2=s1.replace(
 //   regex("[\S]([\"])[$\s]?"),

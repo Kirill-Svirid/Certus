@@ -1,7 +1,7 @@
 // Source:https://github.com/typst/typst/issues/779#issuecomment-2702268234
 /// Use to allow reference with the `enum-label` function
 // #import "utils.typ": *
-#import "@preview/t4t:0.4.3": is-empty
+#import "utils.typ": is-empty
 #let enu-label-mark = metadata("enumeration_label")
 
 
@@ -27,7 +27,7 @@
   enum-numbering
 }
 
-// Модификация перечислений
+// Модификация перечислений для возможности создания ссылок
 #let enable-referenceable-enums(doc) = {
   show ref: it => {
     let el = it.element

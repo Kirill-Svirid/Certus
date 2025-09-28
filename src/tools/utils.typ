@@ -32,7 +32,7 @@
 
 // Convert string quotes into new, when the input is string.
 // For now Typst doesn't convert them, if they are provided as is
-#let string-convert-quote-marks(s,l-side:"«",r-side:"»") = {
+#let string-convert-quote-marks(s, l-side: "«", r-side: "»") = {
   let m = s.matches(regex("^?(?:[\s]?)([\"\'])[^\s\"\']"))
   for v in m {
     s = s.replace(v.text, v.text.replace(v.captures.first(), l-side))

@@ -1,4 +1,4 @@
-#import "@preview/t4t:0.4.3": is-empty
+#import "utils.typ": is-empty
 
 #let get-numbering-alphabet-ru(number) = {
   let alphabet = (

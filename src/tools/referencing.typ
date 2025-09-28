@@ -35,7 +35,7 @@
 )
 
 
-#let document-validate-base(doc) = {
+#let _document-validate-base(doc) = {
   assert(
     (doc.at("title"), doc.at("name"), doc.at("type")).all(it => type(it) == str),
     message: "Поля (title, name, type) должны иметь тип str",
@@ -58,24 +58,7 @@
 }
 
 
-#let document-sort-prefix(key) = {
-  key = lower(key)
-  let case = (
-    (key.match(regex("^гост.*")), "000"),
-    (key.match(regex("^нп.*")), "010"),
-    (key.match(regex("^санпин.*")), "020"),
-    (key.match(regex("^сп.*")), "025"),
-    (key.match(regex("^ост.*")), "030"),
-    (key.match(regex("^стк.*")), "040"),
-    (key.match(regex("^сто.*")), "050"),
-    (key.match(regex("^ту.*")), "060"),
-    (true, "100"),
-  )
-  return case.find(it => it.at(0) != none).at(1)
-}
-
-
-// Предназначена для определения схемы представления документа в таблице ссылок или в списке литературы
+// Предназначена для определения схемы представления документа в таблице ссылок или в списке литературы по умолчанию
 #let document-default-repr(document) = {
   let lbl = document.at("label")
   let type = document.at("type")
@@ -105,6 +88,8 @@
   })
 }
 
+
+// Чтение определений документов для ссылок
 #let document-read-definition(
   lbl,
   entity,
@@ -120,10 +105,9 @@
   doc.insert("repr-func", if repr-func != none { repr-func } else { document-default-repr })
   doc.insert("headings", ())
   doc.insert("flags", flags)
-  document-validate-base(doc)
+  _document-validate-base(doc)
 
   for (k, v) in doc {
-    // doc.at(k) = v.replace(regex("^[\r\n\s]|[\r\n\s]+$"), "")
     if type(v) == str {
       // При парсинге к строковым значениями может быть добавлен NewLine.
       // Это мешает при формировании элементов списков и конкатенации. По дефолту это лучше убрать
@@ -193,19 +177,34 @@
   })
 }
 
+#let _document-sort-prefix(key) = {
+  key = lower(key)
+  let case = (
+    (key.match(regex("^гост.*")), "000"),
+    (key.match(regex("^нп.*")), "010"),
+    (key.match(regex("^санпин.*")), "020"),
+    (key.match(regex("^сп.*")), "025"),
+    (key.match(regex("^ост.*")), "030"),
+    (key.match(regex("^стк.*")), "040"),
+    (key.match(regex("^сто.*")), "050"),
+    (key.match(regex("^ту.*")), "060"),
+    (true, "100"),
+  )
+  return case.find(it => it.at(0) != none).at(1)
+}
 
 // Предназначена для определения схемы сортировки документа
-#let document-get-sort-key(document-name) = {
+#let _document-get-sort-key(document-name) = {
   let item = document-base.final().at(document-name, default: none)
   assert(item != none, message: "Документ не обнаружен:" + document-name)
   let type = item.at("type")
   let name = item.at("name")
-  let prefix = document-sort-prefix(name)
+  let prefix = _document-sort-prefix(name)
   return prefix + name
 }
 
 
-// Предназначена для объявления документа по тексту
+// Объявления документа по тексту для ссылок
 #let document-ref(document-item, repr-func: none, flags: none) = context {
   let headings = query(heading.where(level: 2).or(heading.where(level: 1)).before(here()))
   headings = headings.filter(it => it.numbering != none)
@@ -304,7 +303,7 @@
   )
 
   let label-array = mentions.keys()
-  let sort-array = mentions.keys().map(document-get-sort-key)
+  let sort-array = mentions.keys().map(_document-get-sort-key)
   let item-array = label-array.map(it => document-base.final().at(it))
   let header-array = mentions.values()
 
@@ -358,7 +357,13 @@
     columns: (13.0cm, 1fr),
     inset: (top: 2mm, bottom: 2mm, rest: 1.5mm),
     align: (x, y) => {
-      if y == 0 { center + horizon } else if y > 0 and x == 0 { left + top } else { center + horizon }
+      if y == 0 {
+        center + horizon
+      } else if y > 0 and x == 0 {
+        left + top
+      } else {
+        center + horizon
+      }
     },
     table.header(..header),
     ..table-args,

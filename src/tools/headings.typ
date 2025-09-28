@@ -13,17 +13,8 @@
   reference-list-docs: [Ссылочные документы],
   reference-list-legislation-docs: [Ссылочные нормативные документы],
   reference-list-bibliography: [Библиография],
+  test: [Закл],
 )
-
-// Selects headings of level 1 and body of special list of content to disable enumeration for them (GOST requirements)
-#let set-heading-titles = body => {
-  let folder-func(sel, item) = sel.or(heading.where(body: item, level: 1))
-  let selector-structural-heading = structural-heading-titles.values().fold(selector, folder-func)
-  show selector-structural-heading: set heading(numbering: none)
-  show selector-structural-heading: set align(center)
-
-  body
-}
 
 #let is-heading-in-structural(heading) = {
   if structural-heading-titles.values().position(it => it == heading.body) != none and heading.level == 1 {
