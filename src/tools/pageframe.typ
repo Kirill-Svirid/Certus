@@ -319,7 +319,7 @@
 
 
 
-#let page-frame-other(document-data: document-data) = {
+#let page-frame-continuous(document-data: document-data) = {
   context {
     let width = page.width
     let height = page.height
@@ -340,10 +340,12 @@
   page-outer-frame()
 }
 
+
+// Inner description of function
 #let page-frame-sequence(document-data: document-data) = context {
   if page-frame-counter.get().first() == 0 {
     page-frame-outline(document-data: document-data)
   } else {
-    page-frame-other(document-data: document-data)
+    page-frame-continuous(document-data: document-data)
   }
 }

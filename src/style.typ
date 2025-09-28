@@ -87,6 +87,8 @@
   doc
 }
 
+
+// Default styling for document
 #let style-ver-1(doc) = {
   show: set-base-style.with()
   let header-counter = counter("header-all")
